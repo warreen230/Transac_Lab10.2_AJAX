@@ -74,5 +74,13 @@
                 </td>
             </tr>
         }
+        @section Scripts{
+            <script>
+                $("tr.WeaponList")
+                .on("mouseenter",function() {$(this).addClass("highlight");})
+                .on("mouseleave",function(){$(this).removeClass("highlight");});
+            </script>
+        }
+
     </tbody>
 </table>

@@ -16,6 +16,7 @@
         @foreach (var item in Model)
         {
             <partial name="_ZombieCard" model="item"/>
+           
         }
     </div>
 
@@ -33,3 +34,35 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        $(".favorite").on("click", function() {
+            let baliseA = $(this);      // Allez chercher l'élément <a> qui a été cliqué.
+            //console.log(baliseA);     // Validation qu'on obtient bien l'élément voulu. (Voir console navigateur)
+            let idZombie = baliseA.attr("id");   // Obtenir l'id en utilisant attr sur l'élément <a> cliqué
+            //console.log(idZombie);    // Validation
+            $.post("/Zombie/Favorite", { "id": idZombie }, // Construction de la requête post car on modifie les données
+                function(data) {
+                    //console.log(data);    // Validation
+                    if (data) {
+                        baliseA.removeClass("text-dark");
+                        baliseA.addClass("text-primary");
+                    } else {
+                        baliseA.removeClass("text-primary");
+                        baliseA.addClass("text-dark");
+                    }
+                });
+        });
+       
+        $(".detail-btn").on("click", function() {
+            let btn = $(this);
+            let idZombie = btn.attr("id");
+            $.get("/Zombie/Details", { "id": idZombie }, // Construction de la requête get
+                function(data) {
+                    $("#showmodal #content").html(data); // Insère data dans le div avec l’id content
+                    $("#showmodal").modal("show")        // Permet d’afficher le modal
+                });
+        });
+
+    </script>
+}

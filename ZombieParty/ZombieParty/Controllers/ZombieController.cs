@@ -26,12 +26,35 @@ namespace ZombieParty.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Favorite(int id)
+        {
+            Zombie? zombie = await _baseDonnees.Zombies.FindAsync(id);
+            if(zombie != null)
+            {
+                zombie.IsFavorite = !zombie.IsFavorite;
+                _baseDonnees.Update(zombie);
+                await _baseDonnees.SaveChangesAsync();
+
+                return Json(zombie.IsFavorite);
+
+            }
+            return NotFound("n'a pas trouvé:" + id);
+        }
         public async Task<IActionResult> Index()
         {
             List<Zombie> zombiesList = (List<Zombie>)await _serviceZ.GetAllIndexAsync();
             return View(zombiesList);
         }
-
+        public async Task<IActionResult> Details(int id)
+        {
+            Zombie zombie = await _serviceZ.GetByIdAsync(id);
+            if(zombie == null)
+            {
+                return NotFound("pas trouvé:" + id);
+            }
+            return PartialView("_ZombieDetails", zombie);
+        }
         public async Task<IActionResult> StrongestZombies()
         {
             List<Zombie> zombiesList = await _baseDonnees.Zombies.Where(z => z.Point >= 8).OrderBy(z => z.Name).Include(z => z.ZombieType).ToListAsync();

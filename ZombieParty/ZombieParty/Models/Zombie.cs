@@ -12,6 +12,7 @@ namespace ZombieParty.Models
         [DisplayName("Name")]
         [StringLength(20, MinimumLength = 5)]
         public string Name { get; set; }
+        public bool IsFavorite { get; set; }
 
         [DisplayName("ShortDesc")]
         [StringLength(255)]
